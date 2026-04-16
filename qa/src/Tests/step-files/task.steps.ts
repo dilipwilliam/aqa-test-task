@@ -10,6 +10,8 @@ import {
   assertFalse,
   assertElementVisible,
 } from '../../utils/assert-utils';
+import { getLocatorByRole } from '../../utils/locator-utils';
+import { generateTaskTitle } from '../../utils/test-data-utils';
 import { getLogger } from '../../utils/logger';
 
 const logger = getLogger();
@@ -117,3 +119,81 @@ Then('the task list should be visible and non-empty', async function (this: Cust
   const names = await taskPage.getTaskNames();
   await assertTrue(names.length > 0, 'Expected task list to have at least one task');
 });
+
+// ─── CRUD Flow — When ─────────────────────────────────────────────────────────
+
+When('I create a task with a unique generated title', async function (this: CustomWorld) {
+  const taskTitle = generateTaskTitle('CRUDTask');
+  logger.info(`Generated task title: "${taskTitle}"`);
+  this.set('dynamicTaskTitle', taskTitle);
+  await taskPage.createTaskViaAddButton(taskTitle);
+});
+
+When('I open the dynamically created task', async function (this: CustomWorld) {
+  const taskTitle = this.get<string>('dynamicTaskTitle');
+  logger.info(`Opening dynamically created task: "${taskTitle}"`);
+  await taskPage.openTask(taskTitle);
+});
+
+When('I add a bullet list comment to the task', async function (this: CustomWorld) {
+  const commentText = `Comment_${Date.now()}`;
+  logger.info(`Adding bullet-list comment: "${commentText}"`);
+  this.set('commentText', commentText);
+  await taskPage.addBulletListComment(commentText);
+});
+
+When('I delete the task from the detail page', async function (this: CustomWorld) {
+  logger.info('Initiating task deletion from detail page');
+  await taskPage.deleteTaskFromDetailPage();
+});
+
+When('I confirm the task deletion', async function (this: CustomWorld) {
+  logger.info('Confirming task deletion');
+  await taskPage.confirmTaskDeletion();
+});
+
+// ─── CRUD Flow — Then ─────────────────────────────────────────────────────────
+
+Then(
+  'the dynamically created task should be visible in the task list',
+  async function (this: CustomWorld) {
+    const taskTitle = this.get<string>('dynamicTaskTitle');
+    logger.info(`Verifying task "${taskTitle}" is visible in task list`);
+    await assertElementVisible(getLocatorByRole('link', { name: taskTitle }));
+  },
+);
+
+Then(
+  'the task detail header should contain the task title',
+  async function (this: CustomWorld) {
+    const taskTitle = this.get<string>('dynamicTaskTitle');
+    logger.info(`Verifying task detail header contains "${taskTitle}"`);
+    await assertElementVisible(taskPage.getTaskDetailHeading(taskTitle));
+  },
+);
+
+Then(
+  'the {string} button should be visible on task detail',
+  async function (this: CustomWorld, buttonName: string) {
+    logger.info(`Verifying "${buttonName}" button is visible on task detail`);
+    await assertElementVisible(getLocatorByRole('button', { name: buttonName }));
+  },
+);
+
+Then(
+  'the {string} section should be visible on task detail',
+  async function (this: CustomWorld, sectionName: string) {
+    logger.info(`Verifying "${sectionName}" section is visible on task detail`);
+    await assertElementVisible(
+      getLocatorByRole('heading', { name: new RegExp(sectionName, 'i') }),
+    );
+  },
+);
+
+Then(
+  'I should see the success message {string}',
+  async function (this: CustomWorld, message: string) {
+    logger.info(`Verifying success toast: "${message}"`);
+    await taskPage.waitForSuccessMessage(message);
+  },
+);

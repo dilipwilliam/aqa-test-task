@@ -1,6 +1,6 @@
 /**
  * TaskPage — encapsulates locators and actions for Vikunja task management within a project.
- * Covers: create, read, update, delete tasks.
+ * Covers: create, read, update, delete tasks (list view + detail page).
  */
 import {
   getLocatorByRole,
@@ -8,7 +8,7 @@ import {
   getLocatorByPlaceholder,
   getLocator,
 } from '../../utils/locator-utils';
-import { click, fill, getText, waitForElement, pressKeyOnElement } from '../../utils/action-utils';
+import { click, fill, waitForElement, pressKeyOnElement } from '../../utils/action-utils';
 import { getLogger } from '../../utils/logger';
 
 const logger = getLogger();
@@ -145,5 +145,120 @@ export class TaskPage {
     await fill(titleField, newTitle);
     await click(this.saveTaskButton);
     logger.info(`Task renamed to "${newTitle}"`);
+  }
+
+  // ─── CRUD flow locators (task detail page) ─────────────────────────────────
+
+  /** "Add" button that appears next to the inline task-creation input. */
+  private get addTaskButton() {
+    return getLocatorByRole('button', { name: 'Add', exact: true });
+  }
+
+  /** "Subscribe" button in the task detail sidebar. */
+  private get subscribeButton() {
+    return getLocatorByRole('button', { name: 'Subscribe' });
+  }
+
+  /**
+   * "Bullet list" button inside the Comments editor toolbar.
+   * nth(1) because the Description editor renders an identical toolbar first.
+   */
+  private get commentBulletListButton() {
+    return getLocatorByRole('button', { name: 'Bullet list' }).nth(1);
+  }
+
+  /**
+   * Text-input area inside the Comments editor.
+   * nth(1) because the Description editor renders its textbox first.
+   */
+  private get commentEditorTextbox() {
+    return getLocatorByRole('textbox').nth(1);
+  }
+
+  /** Submit button for the comment editor (labelled "Comment" in the UI). */
+  private get commentSubmitButton() {
+    return getLocatorByRole('button', { name: 'Comment' });
+  }
+
+  /**
+   * "Delete" button in the task detail sidebar.
+   * Scoped via the Subscribe button's parent container to stay distinct from
+   * any per-comment Delete buttons in the Comments section.
+   */
+  private get taskDetailDeleteButton() {
+    return this.subscribeButton
+      .locator('xpath=..')
+      .getByRole('button', { name: 'Delete' });
+  }
+
+  /** "Do it!" confirmation button inside the delete-task dialog. */
+  private get deleteConfirmButton() {
+    return getLocatorByRole('button', { name: 'Do it!' });
+  }
+
+  // ─── CRUD flow public accessor ─────────────────────────────────────────────
+
+  /**
+   * Returns the level-1 heading locator for the task detail page.
+   * Used by step definitions to assert the page header matches the task title.
+   */
+  getTaskDetailHeading(taskName: string) {
+    return getLocatorByRole('heading', { name: taskName });
+  }
+
+  // ─── CRUD flow actions ─────────────────────────────────────────────────────
+
+  /**
+   * Create a task by filling the inline input then clicking the "Add" button.
+   * (Distinct from createTask which presses Enter — this exercises the button.)
+   */
+  async createTaskViaAddButton(title: string): Promise<void> {
+    logger.info(`Creating task via Add button: "${title}"`);
+    await waitForElement(this.addTaskInput, 'visible');
+    await fill(this.addTaskInput, title);
+    await waitForElement(this.addTaskButton, 'visible');
+    await click(this.addTaskButton);
+    logger.info(`Task "${title}" created`);
+  }
+
+  /**
+   * Add a comment in bullet-list format:
+   *   1. Click Bullet list in the Comments editor toolbar.
+   *   2. Fill the comment textbox.
+   *   3. Submit with the Comment button.
+   */
+  async addBulletListComment(commentText: string): Promise<void> {
+    logger.info(`Adding bullet-list comment: "${commentText}"`);
+    await click(this.commentBulletListButton);
+    await fill(this.commentEditorTextbox, commentText);
+    await waitForElement(this.commentSubmitButton, 'visible');
+    await click(this.commentSubmitButton);
+    logger.info('Comment submitted');
+  }
+
+  /**
+   * Click the "Delete" button in the task detail sidebar to open the
+   * confirmation dialog. Follow with confirmTaskDeletion() to finish.
+   */
+  async deleteTaskFromDetailPage(): Promise<void> {
+    logger.info('Clicking Delete on task detail sidebar');
+    await click(this.taskDetailDeleteButton);
+  }
+
+  /** Confirm the deletion dialog by clicking "Do it!". */
+  async confirmTaskDeletion(): Promise<void> {
+    logger.info('Confirming task deletion via "Do it!"');
+    await waitForElement(this.deleteConfirmButton, 'visible');
+    await click(this.deleteConfirmButton);
+  }
+
+  /**
+   * Wait for a transient success toast containing the given text.
+   * Uses a shorter 8 s timeout appropriate for UI notification banners.
+   */
+  async waitForSuccessMessage(message: string): Promise<void> {
+    logger.info(`Waiting for success message: "${message}"`);
+    const toast = getLocatorByText(message);
+    await waitForElement(toast, 'visible', { timeout: 8_000 });
   }
 }

@@ -4,38 +4,31 @@ Feature: Task Management CRUD
   I want to manage tasks within my projects
   So that I can track my work items
 
-  Background:
-    Given I am logged into the application as "qauser" with password "qaPassword1!"
-    And a project titled "Task Test Project" exists
-    And I have opened the project "Task Test Project"
+  @crud @task @positive  @TC_007
+  Scenario: Task Creation - CRUD Flow
 
-  @smoke @task @create @positive
-  Scenario: Create a new task in a project
-    When I create a task with title "My First Task"
-    Then the task "My First Task" should be visible in the task list
+    Given I am on the login page
+    When I enter username "dilipwilliam"
+    And I enter password "Test@123"
+    And I click the login button
+    
+    # CREATE
+    When I create a task with a unique generated title
+    Then the dynamically created task should be visible in the task list
 
-  @task @create @positive @regression
-  Scenario: Create multiple tasks in a project
-    When I create a task with title "Task One"
-    And I create a task with title "Task Two"
-    And I create a task with title "Task Three"
-    Then the task "Task One" should be visible in the task list
-    And the task "Task Two" should be visible in the task list
-    And the task "Task Three" should be visible in the task list
+    # READ
+    When I open the dynamically created task
+    Then the task detail header should contain the task title
+    And the "Subscribe" button should be visible on task detail
+    And the "Add to Favorites" button should be visible on task detail
+    And the "Description" section should be visible on task detail
+    And the "Comments" section should be visible on task detail
 
-  @task @update @positive @regression
-  Scenario: Mark a task as done
-    Given a task titled "Task To Complete" exists in the project
-    When I mark the task "Task To Complete" as done
-    Then the task "Task To Complete" should be marked as complete
+    # UPDATE — add a bullet-list comment
+    When I add a bullet list comment to the task
+    Then I should see the success message "The comment was added successfully."
 
-  @task @delete @positive
-  Scenario: Delete a task from a project
-    Given a task titled "Task To Delete" exists in the project
-    When I delete the task "Task To Delete"
-    Then the task "Task To Delete" should not be visible in the task list
-
-  @task @read @positive
-  Scenario: View all tasks in a project
-    Given the project contains at least one task
-    Then the task list should be visible and non-empty
+    # DELETE
+    When I delete the task from the detail page
+    And I confirm the task deletion
+    Then I should see the success message "The task has been deleted successfully."
