@@ -34,7 +34,7 @@ export class LoginPage {
   }
 
   private get registerLink() {
-    return getLocatorByText(/register/i);
+    return getLocatorByRole('link', { name: 'Create account' });
   }
 
   private get forgotPasswordLink() {
@@ -114,6 +114,14 @@ export class LoginPage {
    * Click the 'Register' link to navigate to registration.
    */
   async clickRegister(): Promise<void> {
+    await click(this.registerLink);
+  }
+
+  /**
+   * Click the "Create account" link on the login page to go to /register.
+   */
+  async clickCreateAccountLink(): Promise<void> {
+    logger.debug('Clicking Create account link on login page');
     await click(this.registerLink);
   }
 

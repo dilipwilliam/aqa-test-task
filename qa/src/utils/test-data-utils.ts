@@ -67,6 +67,15 @@ export function generatePassword(): string {
 }
 
 /**
+ * Generate a registration email with @test.com domain.
+ * Uses the provided username (or a random one) as the local part.
+ */
+export function generateRegistrationEmail(username?: string): string {
+  const base = username ?? generateUsername();
+  return `${base}@test.com`;
+}
+
+/**
  * Build a Vikunja user registration payload.
  */
 export function buildRegistrationPayload(overrides?: {

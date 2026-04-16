@@ -2,6 +2,7 @@
  * DashboardPage — encapsulates locators and interactions for the Vikunja main dashboard.
  * Follows Single Responsibility Principle: navigation, header state, sidebar access.
  */
+import type { Locator } from '@playwright/test';
 import { getLocatorByRole, getLocatorByText, getLocator } from '../../utils/locator-utils';
 import { click, getText } from '../../utils/action-utils';
 import { navigateTo, getURL } from '../../utils/page-utils';
@@ -41,6 +42,11 @@ export class DashboardPage {
   /** Sidebar 'New Project' button */
   private get newProjectButton() {
     return getLocatorByRole('button', { name: /new project/i });
+  }
+
+  /** "Winding down, username?" welcome heading shown on a fresh user's dashboard */
+  private get textOnDashboardPage() {
+    return getLocatorByText("Import your projects and tasks from other services into Vikunja:")
   }
 
   // ─── Actions ──────────────────────────────────────────────────────────
@@ -107,5 +113,13 @@ export class DashboardPage {
    */
   async getHeadingText(): Promise<string> {
     return getText(this.pageHeading);
+  }
+
+  /**
+   * Return the "Winding down" welcome heading locator for external assertions.
+   * Used after new user registration to verify successful redirect to dashboard.
+   */
+  getTextOnDashboardPage(): Locator {
+    return this.textOnDashboardPage;
   }
 }
