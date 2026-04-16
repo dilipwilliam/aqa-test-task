@@ -484,3 +484,35 @@ npx cucumber-js --config=cucumber.js --tags "@TC_007" src/Tests/feature-files/ta
 | TC 005    | `@TC_005`| `login.feature`    |
 | TC 006    | `@TC_006`| `register.feature` |
 | TC 007    | `@TC_007`| `task.feature`     |
+
+# Project Reports
+
+## Available Scripts
+
+### Clean Report
+Removes previously generated report files.
+```bash
+npm run report:clean
+```
+
+### Generate Report
+Generates a fresh report based on the latest data.
+```bash
+npm run report:generate
+```
+
+### Open Report
+Opens the generated report in your default browser or viewer.
+```bash
+npm run report:open
+```
+
+---
+
+## Usage
+
+Run the commands in sequence to clean, generate, and view the report:
+
+```bash
+npm run report:clean && npm run report:generate && npm run report:open
+```
