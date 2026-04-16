@@ -20,7 +20,7 @@ Feature: User Authentication
   Scenario: Failed login with invalid credentials
     Given I am on the login page
     When I enter username "dilipwilliam"
-    And I enter password "Test@1231"
+    And I enter password "Wrong@123"
     And I click the login button
     Then I should see an authentication error message
     And I should remain on the login page

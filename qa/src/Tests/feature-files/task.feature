@@ -4,6 +4,9 @@ Feature: Task Management CRUD
   I want to manage tasks within my projects
   So that I can track my work items
 
+  Background:
+    Given the application is accessible
+
   @crud @task @positive  @TC_007
   Scenario: Task Creation - CRUD Flow
 
