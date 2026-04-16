@@ -411,3 +411,76 @@ Key CI behaviours:
 - `process.env.CI` → `retries: 2`, `workers: 4`, GitHub reporter enabled
 - `HEADLESS` defaults to `true` in all environments
 - `LOG_LEVEL=debug` for verbose CI output
+
+
+# 🧪 Cucumber.js Test Suite
+
+## 📋 Prerequisites
+
+- Node.js installed
+- Dependencies installed via `npm install`
+- `cucumber.js` config file present at project root
+
+---
+
+## 🚀 Running Tests
+
+### ▶️ Run All Login Tests
+
+```bash
+npx cucumber-js --config=cucumber.js --tags "@login" src/Tests/feature-files/login.feature
+```
+
+---
+
+### 🔐 Login Feature — `src/Tests/feature-files/login.feature`
+
+```bash
+# TC_001
+npx cucumber-js --config=cucumber.js --tags "@TC_001" src/Tests/feature-files/login.feature
+
+# TC_002
+npx cucumber-js --config=cucumber.js --tags "@TC_002" src/Tests/feature-files/login.feature
+
+# TC_003
+npx cucumber-js --config=cucumber.js --tags "@TC_003" src/Tests/feature-files/login.feature
+
+# TC_004
+npx cucumber-js --config=cucumber.js --tags "@TC_004" src/Tests/feature-files/login.feature
+
+# TC_005
+npx cucumber-js --config=cucumber.js --tags "@TC_005" src/Tests/feature-files/login.feature
+```
+
+---
+
+### 📝 Register Feature — `src/Tests/feature-files/register.feature`
+
+```bash
+# TC_006
+npx cucumber-js --config=cucumber.js --tags "@TC_006" src/Tests/feature-files/register.feature
+```
+
+---
+
+### ✅ Task Feature — `src/Tests/feature-files/task.feature`
+
+```bash
+# TC_007
+npx cucumber-js --config=cucumber.js --tags "@TC_007" src/Tests/feature-files/task.feature
+```
+
+---
+
+## 📊 Test Cases Summary
+
+| Test Case | Tag      | Feature File       |
+|-----------|----------|--------------------|
+| All Login | `@login` | `login.feature`    |
+| TC 001    | `@TC_001`| `login.feature`    |
+| TC 002    | `@TC_002`| `login.feature`    |
+| TC 003    | `@TC_003`| `login.feature`    |
+| TC 004    | `@TC_004`| `login.feature`    |
+| TC 005    | `@TC_005`| `login.feature`    |
+| TC 006    | `@TC_006`| `register.feature` |
+| TC 007    | `@TC_007`| `task.feature`     |
