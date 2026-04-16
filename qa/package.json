@@ -1,0 +1,67 @@
+{
+  "name": "vikunja-qa-framework",
+  "version": "1.0.0",
+  "description": "Enterprise Playwright + TypeScript + BDD Cucumber Automation Framework for Vikunja",
+  "author": "QA Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test:web": "cross-env ENV=QA playwright test --project=chromium",
+    "test:web:headed": "cross-env ENV=QA HEADLESS=false playwright test --project=chromium --headed",
+    "test:web:firefox": "cross-env ENV=QA playwright test --project=firefox",
+    "test:web:webkit": "cross-env ENV=QA playwright test --project=webkit",
+    "test:api": "cross-env ENV=QA cucumber-js --profile default --tags @api",
+    "test:bdd": "cross-env ENV=QA cucumber-js --profile default",
+    "test:bdd:smoke": "cross-env ENV=QA cucumber-js --profile default --tags @smoke",
+    "test:bdd:parallel": "cross-env ENV=QA cucumber-js --profile parallel",
+    "test:bdd:dev": "cross-env ENV=DEV cucumber-js --profile default",
+    "test:bdd:stage": "cross-env ENV=STAGE cucumber-js --profile default",
+    "test:all": "npm run test:bdd && npm run test:web",
+    "report:generate": "allure generate allure-results --clean -o allure-report",
+    "report:open": "allure open allure-report",
+    "report:clean": "rimraf allure-results allure-report",
+    "lint": "eslint . --ext .ts --max-warnings 0",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"MySQL/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"MySQL/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky || true",
+    "install:browsers": "playwright install --with-deps"
+  },
+  "dependencies": {
+    "allure-cucumberjs": "^2.15.1",
+    "allure-js-commons": "^2.15.1",
+    "allure-playwright": "^2.15.1",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.10.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.9.0",
+    "@cucumber/pretty-formatter": "^1.0.1",
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "allure-commandline": "^2.30.0",
+    "axios": "^1.7.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix --max-warnings 0",
+      "prettier --write"
+    ]
+  }
+}

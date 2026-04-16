@@ -1,0 +1,4 @@
+This is a sample upload file used in automated tests.
+Framework: Playwright + TypeScript
+Application: Vikunja
+Purpose: File upload testing

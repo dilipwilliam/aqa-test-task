@@ -1,0 +1,28 @@
+node_modules/
+dist/
+
+# Test outputs
+allure-results/
+allure-report/
+test-results/
+playwright-report/
+logs/
+*.log
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# TypeScript build info
+*.tsbuildinfo
