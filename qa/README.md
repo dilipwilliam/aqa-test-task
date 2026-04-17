@@ -420,6 +420,8 @@ Key CI behaviours:
 - Node.js installed
 - Dependencies installed via `npm install`
 - `cucumber.js` config file present at project root
+- Install Browser `npx playwright install`
+
 
 ---
 
