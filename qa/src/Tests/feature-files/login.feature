@@ -11,7 +11,7 @@ Feature: User Authentication
   Scenario: Successful login with valid credentials
     Given I am on the login page
     When I enter username "dilipwilliam"
-    And I enter password "Test@123"
+    And I enter password "TEST@0110"
     And I click the login button
     Then I should be redirected to the dashboard
     And I should not see the login form
